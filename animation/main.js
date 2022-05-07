@@ -33,7 +33,7 @@ class Ball {
   }
   
   momentumCalculation(m1,m2,v1,v2){
-    v = ((m1-m2)*v1 + 2*m2*v2)/(m1+m2);
+    let v = ((m1-m2)*v1 + 2*m2*v2)/(m1+m2);
     return v
   }
 
@@ -84,10 +84,14 @@ class Ball {
 
         if (distance < this.size + balls[j].size) {
 
-          this.velX = this.momentumCalculation(1,1,this.velX,balls[j].velX);
+          let a;
+          a = this.momentumCalculation(1,1,this.velX,balls[j].velX);
           balls[j].velX = this.momentumCalculation(1,1,balls[j].velX,this.velX);
-          this.velY = this.momentumCalculation(1,1,this.velY,balls[j].velY);
+          this.velX = a;
+
+          a = this.momentumCalculation(1,1,this.velY,balls[j].velY);
           balls[j].velY = this.momentumCalculation(1,1,balls[j].velY,this.velY);
+          this.velY = a;
 
 
         }
