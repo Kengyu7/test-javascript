@@ -11,13 +11,38 @@ function random(min, max) {
 }
 
 class Ball {
-  constructor(x, y, velX, velY, color, size) {
+  constructor(x, y, velX, velY, color, size, id) {
     this.x = x;
     this.y = y;
     this.velX = velX;
     this.velY = velY;
     this.color = color;
     this.size = size;
+    this.id= id;
+    
+  }
+
+  getDegree(x, y, x2, y2) {
+    radian = Math.atan2(y2 - y,x2 - x);
+    degree = arcLineMargineRadian * 180 / Math.PI;
+    return degree;
+  }
+
+  getVelocity(vx,vy,degree){
+    
+  }
+  
+  momentumCalculation(m1,m2,v1,v2){
+    v = ((m1-m2)*v1 + 2*m2*v2)/(m1+m2);
+    return v
+  }
+
+  updateVelx(vx){
+    this.velX=vx;
+  }
+
+  updateVelyy(vy){
+    this.velY=vy;
   }
 
   draw() {
@@ -46,28 +71,38 @@ class Ball {
 
     this.x += this.velX;
     this.y += this.velY;
+
+    this.collisionDetect();
   }
 
   collisionDetect() {
-    for (let j = 0; j < balls.length; j++) {
+    for (let j = this.id; j < balls.length; j++) {
       if (!(this === balls[j])) {
         const dx = this.x - balls[j].x;
         const dy = this.y - balls[j].y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < this.size + balls[j].size) {
-          balls[j];
+
+          this.velX = this.momentumCalculation(1,1,this.velX,balls[j].velX);
+          balls[j].velX = this.momentumCalculation(1,1,balls[j].velX,this.velX);
+          this.velY = this.momentumCalculation(1,1,this.velY,balls[j].velY);
+          balls[j].velY = this.momentumCalculation(1,1,balls[j].velY,this.velY);
+
+
         }
       }
     }
   }
 }
 
+
+
 let testBall = new Ball(50, 100, 4, 4, 'blue', 10);
 
 let balls = [];
 
-while (balls.length < 100) {
+for(let i=0;i<100;i++){
   let size = random(10, 20);
   let ball = new Ball(
     random(0 + size, width - size),
@@ -76,6 +111,7 @@ while (balls.length < 100) {
     random(-7, 7),
     `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`,
     size,
+    i,
   );
   console.log(ball);
 
@@ -90,6 +126,7 @@ function loop() {
     balls[i].draw();
     balls[i].update();
     console.log(balls[i]);
+
   }
 
   requestAnimationFrame(loop);
